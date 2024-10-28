@@ -324,6 +324,42 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1851160921559249840, guid: 3d4998389175ab44ea4d4fc6a1c102cd, type: 3}
   m_PrefabInstance: {fileID: 76243786}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &132595195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132595196}
+  m_Layer: 0
+  m_Name: CamPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &132595196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132595195}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 151085634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &151085634 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+  m_PrefabInstance: {fileID: 464694401}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &203228967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1339,6 +1375,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 132595196}
     - targetCorrespondingSourceObject: {fileID: 400002, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1489931164}
@@ -3236,7 +3275,7 @@ Transform:
   m_GameObject: {fileID: 979386675}
   serializedVersion: 2
   m_LocalRotation: {x: -0.073298104, y: -0.7304966, z: 0.0061528874, w: 0.6789436}
-  m_LocalPosition: {x: -0.666, y: 0.0841, z: -0.0019}
+  m_LocalPosition: {x: -0.718, y: 0.089, z: -0.006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4361,12 +4400,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 100
   totalbullet: 90
-  bulletsLeft: 30
-  currentBullet: 0
+  bulletsLeft: 90
+  currentBullet: 30
   fireRate: 0.1
-  shootPoint: {fileID: 979386676}
+  shootPoint: {fileID: 132595196}
   FireEfect: {fileID: 511746967}
   shooterSounds: {fileID: 8300000, guid: 8e4e324edc9aea24a82be2680aa7ec86, type: 3}
+  hitEffect: {fileID: 100006, guid: ccbcfc705a39717429590a9f247ec30a, type: 3}
+  bulletEfect: {fileID: 6023965533879063305, guid: be48901e96f62bb46b573b9860961719, type: 3}
 --- !u!95 &1439508455
 Animator:
   serializedVersion: 5
