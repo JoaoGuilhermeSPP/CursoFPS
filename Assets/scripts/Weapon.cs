@@ -91,7 +91,7 @@ public class Weapon : MonoBehaviour
         }
         Anim.CrossFadeInFixedTime("recarregar", 0.1f);
     }
-    public void Reload() // Logica para recarregar o pente 
+    public void Reload() // Logica para recarregar o pente.
     {
         if (bulletsLeft <= 0) 
         {
