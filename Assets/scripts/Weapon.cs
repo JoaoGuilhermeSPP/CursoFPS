@@ -22,6 +22,9 @@ public class Weapon : MonoBehaviour
 
     public AudioClip shooterSounds; //som da arma
     private AudioSource audioSource;
+
+    public GameObject hitEffect;//Efeito ao colidir
+    public GameObject bulletEfect;
     void Start()
     {
         currentBullet = totalbullet;
@@ -69,7 +72,10 @@ public class Weapon : MonoBehaviour
 
         if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, range)) //raycast onde identtifica o ojeto que foi  acertado
         {
-            Debug.Log(hit.transform.name);
+            GameObject hitParticle = Instantiate(hitEffect, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal)); //Instancia a fumaça do tiro
+            GameObject bullt = Instantiate(bulletEfect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal)); //Instancia o buraco do tiro
+            Destroy(hitParticle, 0.7f);
+            Destroy(bullt, 0.7f);
         }
         Anim.CrossFadeInFixedTime("atirar", 0.01f);//chama animacao pele nome e tempo e transicao
         FireEfect.Play();//inicia o efeito de atirar
