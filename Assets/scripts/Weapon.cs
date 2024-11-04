@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
-using static UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
@@ -16,6 +16,7 @@ public class Weapon : MonoBehaviour
     public int currentBullet; //atual do pente
     public float fireRate = 0.4f; //tempo de cowdown por tiro
     private float fireTimer; // tempo
+    public float spreadFactor;
     private Animator Anim;
 
     [Header("Shoots")]
@@ -34,6 +35,10 @@ public class Weapon : MonoBehaviour
     [Header("Dano - Semi/auto")]
     public int damage;
 
+
+    [Header("UI")]
+    public Text amoText;
+
     public enum ShootMode //Modo de tiro semi automatico
     {
        auto,
@@ -41,6 +46,11 @@ public class Weapon : MonoBehaviour
     }
     public ShootMode shootMode;
     private bool ShootInput;
+
+    private void OnEnable()//Chama-se quando objeto é ativado
+    {
+        UpdateamoText();
+    }
 
     [Header("Mira")]//Variaveis da mira
     public Vector3 miraPos;
@@ -53,6 +63,7 @@ public class Weapon : MonoBehaviour
         Anim = GetComponent<Animator>(); //recebe o animator
         audioSource = GetComponent<AudioSource>(); //recebe o audio
         originalPos = transform.localPosition; //Posicap original
+        UpdateamoText();//UI
     }
 
   
@@ -117,9 +128,10 @@ public class Weapon : MonoBehaviour
 
         fireTimer = 0f;
         RaycastHit hit;
+        Vector3 ShootDirection = shootPoint.transform.forward; //Direcao do tiro
+        ShootDirection = ShootDirection + shootPoint.transform.TransformDirection(new Vector3(Random.Range(-spreadFactor, spreadFactor), Random.Range(-spreadFactor, spreadFactor)));//Logica para o tiro nao ficar centralizado
 
-
-        if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, range)) //raycast onde identtifica o ojeto que foi  acertado
+        if (Physics.Raycast(shootPoint.position,ShootDirection, out hit, range)) //raycast onde identtifica o ojeto que foi  acertado
         {
             GameObject hitParticle = Instantiate(hitEffect, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal)); //Instancia a fumaça do tiro
             GameObject bullt = Instantiate(bulletEfect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal)); //Instancia o buraco do tiro
@@ -135,7 +147,8 @@ public class Weapon : MonoBehaviour
 
             Anim.CrossFadeInFixedTime("atirar", 0.01f);//chama animacao pele nome e tempo e transicao
             FireEfect.Play();//inicia o efeito de atirar
-            PlayShootSound();
+            PlayShootSound();//som
+            UpdateamoText();//UI
             currentBullet--; //Decai a muniçao
             fireTimer = 0f;
         }
@@ -169,14 +182,16 @@ public class Weapon : MonoBehaviour
             return;
         }
         Anim.CrossFadeInFixedTime("recarregar", 0.1f);
+        UpdateamoText();//UI
     }
     public void Reload() // Logica para recarregar o pente.
     {
+        Anim.applyRootMotion = false;
         if (bulletsLeft <= 0) 
         {
             return;
         }
-
+        UpdateamoText();//UI
         int bulletsToLoad = totalbullet - currentBullet;
         int bulletsToDeduct = (bulletsLeft >= bulletsToLoad) ? bulletsToLoad : bulletsLeft; //if ternario para determinar se a condicao foi aceita recebe o bulletsToLoad caso nao bulletsLeft
         bulletsLeft -= bulletsToDeduct;
@@ -186,5 +201,10 @@ public class Weapon : MonoBehaviour
     public void PlayShootSound() 
     {
         audioSource.PlayOneShot(shooterSounds);
+    }
+
+    void UpdateamoText() //UI
+    {
+        amoText.text = currentBullet + "/" + bulletsLeft; //manipula o texto UI
     }
 }
