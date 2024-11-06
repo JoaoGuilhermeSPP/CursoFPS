@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,21 +18,21 @@ public class Weapon : MonoBehaviour
     public float spreadFactor;
     private Animator Anim;
     private int points;
-   
+
 
     [Header("Shoots")]
     public Transform shootPoint;//Ponto do raycast 
     private bool isReload; //verifica se carregou
-   
+
     [Header("Sound")]
     public AudioClip shooterSounds; //som da arma
     private AudioSource audioSource;
-   
+
     [Header("Effects")]
     public ParticleSystem FireEfect;// efx de atirar
     public GameObject hitEffect;//Efeito ao colidir
     public GameObject bulletEfect;
-  
+
     [Header("Dano - Semi/auto")]
     public int damage;
 
@@ -45,8 +44,8 @@ public class Weapon : MonoBehaviour
 
     public enum ShootMode //Modo de tiro semi automatico
     {
-       auto,
-       semi
+        auto,
+        semi
     }
     public ShootMode shootMode;
     private bool ShootInput;
@@ -63,18 +62,19 @@ public class Weapon : MonoBehaviour
 
     void Start()
     {
+
         currentBullet = totalbullet;
         Anim = GetComponent<Animator>(); //recebe o animator
         audioSource = GetComponent<AudioSource>(); //recebe o audio
         originalPos = transform.localPosition; //Posicap original
-       
+
         UpdateamoText();//UI
     }
 
-  
+
     void Update()
     {
-       
+
 
         /*if (Input.GetButton("Fire1"))// atira
         {
@@ -87,16 +87,16 @@ public class Weapon : MonoBehaviour
                 DoReload();
             }
          }*/
-        
+
         switch (shootMode)// Determina se é semi ou automatico
         {
             case ShootMode.auto:
                 ShootInput = Input.GetButton("Fire1");
-            break;
-            
+                break;
+
             case ShootMode.semi:
                 ShootInput = Input.GetButtonDown("Fire1");
-            break;
+                break;
 
         }
         if (ShootInput)//logica de tiro
@@ -113,9 +113,9 @@ public class Weapon : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))//recarregar 
         {
-            if(currentBullet < totalbullet && bulletsLeft > 0) //Caso esteja maior recarrega
+            if (currentBullet < totalbullet && bulletsLeft > 0) //Caso esteja maior recarrega
             {
-              
+
                 DoReload();
             }
         }
@@ -137,11 +137,11 @@ public class Weapon : MonoBehaviour
         Vector3 ShootDirection = shootPoint.transform.forward; //Direcao do tiro
         ShootDirection = ShootDirection + shootPoint.transform.TransformDirection(new Vector3(Random.Range(-spreadFactor, spreadFactor), Random.Range(-spreadFactor, spreadFactor)));//Logica para o tiro nao ficar centralizado
 
-        if (Physics.Raycast(shootPoint.position,ShootDirection, out hit, range)) //raycast onde identtifica o ojeto que foi  acertado
+        if (Physics.Raycast(shootPoint.position, ShootDirection, out hit, range)) //raycast onde identtifica o ojeto que foi  acertado
         {
             GameObject hitParticle = Instantiate(hitEffect, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal)); //Instancia a fumaça do tiro
             GameObject bullt = Instantiate(bulletEfect, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal)); //Instancia o buraco do tiro
-            
+
             Destroy(hitParticle, 0.7f);
             Destroy(bullt, 0.7f);
 
@@ -166,9 +166,9 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Toaim() 
+    public void Toaim()
     {
-        if(Input.GetButton("Fire2") && !isReload) 
+        if (Input.GetButton("Fire2") && !isReload)
         {
             Anim.applyRootMotion = true;//Como o objeto foi animado no animation usei para ativar
             transform.localPosition = Vector3.Lerp(transform.localPosition, miraPos, Time.deltaTime * miraSpeed);
@@ -197,7 +197,7 @@ public class Weapon : MonoBehaviour
     public void Reload() // Logica para recarregar o pente.
     {
         Anim.applyRootMotion = false;
-        if (bulletsLeft <= 0) 
+        if (bulletsLeft <= 0)
         {
             return;
         }
@@ -206,15 +206,18 @@ public class Weapon : MonoBehaviour
         int bulletsToDeduct = (bulletsLeft >= bulletsToLoad) ? bulletsToLoad : bulletsLeft; //if ternario para determinar se a condicao foi aceita recebe o bulletsToLoad caso nao bulletsLeft
         bulletsLeft -= bulletsToDeduct;
         currentBullet += bulletsToDeduct;
-             
+
     }
-    public void PlayShootSound() 
+    public void PlayShootSound()
     {
         audioSource.PlayOneShot(shooterSounds);
     }
 
     void UpdateamoText() //UI
     {
-        amoText.text = currentBullet + "/" + bulletsLeft; //manipula o texto UI
+        if (amoText != null)
+        {
+            amoText.text = currentBullet + "/" + bulletsLeft; //manipula o texto UI
+        }
     }
 }
