@@ -18,6 +18,8 @@ public class Weapon : MonoBehaviour
     private float fireTimer; // tempo
     public float spreadFactor;
     private Animator Anim;
+    private int points;
+   
 
     [Header("Shoots")]
     public Transform shootPoint;//Ponto do raycast 
@@ -38,6 +40,8 @@ public class Weapon : MonoBehaviour
 
     [Header("UI")]
     public Text amoText;
+    public Text Points;
+
 
     public enum ShootMode //Modo de tiro semi automatico
     {
@@ -63,12 +67,14 @@ public class Weapon : MonoBehaviour
         Anim = GetComponent<Animator>(); //recebe o animator
         audioSource = GetComponent<AudioSource>(); //recebe o audio
         originalPos = transform.localPosition; //Posicap original
+       
         UpdateamoText();//UI
     }
 
   
     void Update()
     {
+       
 
         /*if (Input.GetButton("Fire1"))// atira
         {
@@ -141,9 +147,15 @@ public class Weapon : MonoBehaviour
 
             if (hit.transform.GetComponent<ObjectHealth>())
             {
-                bulletEfect.transform.SetParent(hit.transform); //Faz com que a municao entre dentro do objeto acertado o destruindo
+                Destroy(bullt);
                 hit.transform.GetComponent<ObjectHealth>().applyDamage(damage);//a variavel serve para retira o damage
             }
+            if (hit.transform.GetComponent<Soldier>())//dano no inimigo
+            {
+                Destroy(bullt);
+                hit.transform.GetComponent<Soldier>().applyDamage(damage);//a variavel serve para retira o damage
+            }
+
 
             Anim.CrossFadeInFixedTime("atirar", 0.01f);//chama animacao pele nome e tempo e transicao
             FireEfect.Play();//inicia o efeito de atirar
@@ -160,12 +172,10 @@ public class Weapon : MonoBehaviour
         {
             Anim.applyRootMotion = true;//Como o objeto foi animado no animation usei para ativar
             transform.localPosition = Vector3.Lerp(transform.localPosition, miraPos, Time.deltaTime * miraSpeed);
-            UnityEngine.Debug.Log("Pressed");
         }
         else
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, originalPos, Time.deltaTime * miraSpeed);
-            UnityEngine.Debug.Log("NoPressed");
         }
     }
     private void FixedUpdate()
